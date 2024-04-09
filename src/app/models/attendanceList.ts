@@ -4,21 +4,27 @@ import { IAttendanceList } from "../entities";
 const attendanceListSchema = new Schema<IAttendanceList>(
   {
     name: { type: String, required: true },
-    users: [
-      {
-        id: {
-          type: Schema.Types.ObjectId,
-          ref: "User",
+    users: {
+      type: [
+        {
+          id: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+          },
+          addedAt: String,
         },
-        addedAt: String,
-      },
-    ],
-    timeframes: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Timeframe",
-      },
-    ],
+      ],
+      required: true,
+    },
+    timeframes: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "Timeframe",
+        },
+      ],
+      required: true,
+    },
   },
   {
     timestamps: true,

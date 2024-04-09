@@ -27,17 +27,18 @@ export interface IUser extends BaseData {
   firstName: string;
   lastName: string;
   role: UserRole;
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
   phoneNumber?: string;
-  profilePic: string;
+  profilePic?: string;
   organizationPosition?: string;
   organizationId: Types.ObjectId;
-  attendanceLists: [{ id: Types.ObjectId; addedAt: string }];
+  attendanceLists?: [{ id: Types.ObjectId; addedAt: string }];
 }
 
 export interface ITimeframe extends BaseData {
   name: string;
+  description: string;
   startDate: string;
   endDate: string;
   attendanceList: Types.ObjectId;

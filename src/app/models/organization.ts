@@ -10,4 +10,7 @@ const organizationSchema = new Schema<IOrganization>(
   }
 );
 
-export default mongoose.model("Organization", organizationSchema);
+export default mongoose.model<IOrganization>(
+  "Organization",
+  organizationSchema
+);

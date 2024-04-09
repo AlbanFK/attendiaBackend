@@ -1,18 +1,17 @@
 import { Request, Response } from "express";
-import organizationServices from "./services";
+import attendanceListServices from "./services";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { isEmpty } from "lodash";
-// import { OrganizationModel } from "app/models";
 
-let OrganizationController = {
+let AttendanceListController = {
   create: async (req: Request, res: Response) => {
-    const { name } = req.body;
-    if (name) {
+    const { name, timeframes, users } = req.body;
+    if (!isEmpty(name) && !isEmpty(timeframes) && !isEmpty(users)) {
       try {
-        const newOrganization = await organizationServices.create(req.body);
+        const newAttendanceList = await attendanceListServices.create(req.body);
 
-        res.status(StatusCodes.CREATED).json(newOrganization);
+        res.status(StatusCodes.CREATED).json(newAttendanceList);
       } catch (error) {
         console.log({ error });
         res
@@ -23,16 +22,16 @@ let OrganizationController = {
       res.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
     }
   },
-  getOrganizations: async (req: Request, res: Response) => {
+  getAttendanceLists: async (req: Request, res: Response) => {
     try {
       const { limit, page, search } = req.query;
-      const organizations = await organizationServices.list(
+      const lists = await attendanceListServices.list(
         ~~(limit ?? "0"),
         ~~(page ?? "0"),
         (search as string) ?? null
       );
 
-      res.status(StatusCodes.OK).json(organizations);
+      res.status(StatusCodes.OK).json(lists);
     } catch (error) {
       console.log({ error });
       res
@@ -44,10 +43,10 @@ let OrganizationController = {
     const { id } = req.params;
     if (!isEmpty(id)) {
       try {
-        const organizationFound = await organizationServices.retrieve(
+        const attendanceListFound = await attendanceListServices.retrieve(
           id as string
         );
-        res.status(StatusCodes.OK).json(organizationFound);
+        res.status(StatusCodes.OK).json(attendanceListFound);
       } catch (error) {
         console.log({ error });
         res
@@ -62,11 +61,11 @@ let OrganizationController = {
     const { id } = req.params;
     if (!isEmpty(req.body?.name) && !isEmpty(id)) {
       try {
-        const organizationUpdated = await organizationServices.update(
+        const attendanceListUpdated = await attendanceListServices.update(
           id,
           req.body
         );
-        res.status(StatusCodes.OK).json(organizationUpdated);
+        res.status(StatusCodes.OK).json(attendanceListUpdated);
       } catch (error) {
         console.log({ error });
         res
@@ -81,7 +80,7 @@ let OrganizationController = {
     const { id } = req.params;
     if (!isEmpty(id)) {
       try {
-        await organizationServices.delete(id);
+        await attendanceListServices.delete(id);
         res.status(StatusCodes.OK).send(ReasonPhrases.OK);
       } catch (error) {
         console.log({ error });
@@ -95,4 +94,4 @@ let OrganizationController = {
   },
 };
 
-export default OrganizationController;
+export default AttendanceListController;

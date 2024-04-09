@@ -8,7 +8,7 @@ export interface BaseData {
    * be always set.
    * @type {string}
    */
-  id: string;
+  _id: string;
 
   /**
    * The creation date of the entity. This value should

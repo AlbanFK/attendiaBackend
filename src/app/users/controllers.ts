@@ -1,38 +1,38 @@
 import { Request, Response } from "express";
-import organizationServices from "./services";
+import userServices from "./services";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { isEmpty } from "lodash";
 // import { OrganizationModel } from "app/models";
 
-let OrganizationController = {
+let UserController = {
   create: async (req: Request, res: Response) => {
-    const { name } = req.body;
-    if (name) {
-      try {
-        const newOrganization = await organizationServices.create(req.body);
-
-        res.status(StatusCodes.CREATED).json(newOrganization);
-      } catch (error) {
-        console.log({ error });
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .send(ReasonPhrases.INTERNAL_SERVER_ERROR);
-      }
-    } else {
-      res.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
-    }
-  },
-  getOrganizations: async (req: Request, res: Response) => {
+    // if (firstName && ) {
     try {
-      const { limit, page, search } = req.query;
-      const organizations = await organizationServices.list(
+      const newUsers = await userServices.create(req.body);
+
+      res.status(StatusCodes.CREATED).json(newUsers);
+    } catch (error) {
+      console.log({ error });
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(ReasonPhrases.INTERNAL_SERVER_ERROR);
+    }
+    // } else {
+    //   res.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
+    // }
+  },
+  getUsers: async (req: Request, res: Response) => {
+    try {
+      const { limit, page, name, organizationId } = req.query;
+      const users = await userServices.list(
         ~~(limit ?? "0"),
         ~~(page ?? "0"),
-        (search as string) ?? null
+        (name as string) ?? null,
+        (organizationId as string) ?? null
       );
 
-      res.status(StatusCodes.OK).json(organizations);
+      res.status(StatusCodes.OK).json(users);
     } catch (error) {
       console.log({ error });
       res
@@ -44,10 +44,8 @@ let OrganizationController = {
     const { id } = req.params;
     if (!isEmpty(id)) {
       try {
-        const organizationFound = await organizationServices.retrieve(
-          id as string
-        );
-        res.status(StatusCodes.OK).json(organizationFound);
+        const userFound = await userServices.retrieve(id as string);
+        res.status(StatusCodes.OK).json(userFound);
       } catch (error) {
         console.log({ error });
         res
@@ -60,13 +58,10 @@ let OrganizationController = {
   },
   update: async (req: Request, res: Response) => {
     const { id } = req.params;
-    if (!isEmpty(req.body?.name) && !isEmpty(id)) {
+    if (!isEmpty(id)) {
       try {
-        const organizationUpdated = await organizationServices.update(
-          id,
-          req.body
-        );
-        res.status(StatusCodes.OK).json(organizationUpdated);
+        const userUpdated = await userServices.update(id, req.body);
+        res.status(StatusCodes.OK).json(userUpdated);
       } catch (error) {
         console.log({ error });
         res
@@ -81,7 +76,7 @@ let OrganizationController = {
     const { id } = req.params;
     if (!isEmpty(id)) {
       try {
-        await organizationServices.delete(id);
+        await userServices.delete(id);
         res.status(StatusCodes.OK).send(ReasonPhrases.OK);
       } catch (error) {
         console.log({ error });
@@ -95,4 +90,4 @@ let OrganizationController = {
   },
 };
 
-export default OrganizationController;
+export default UserController;
